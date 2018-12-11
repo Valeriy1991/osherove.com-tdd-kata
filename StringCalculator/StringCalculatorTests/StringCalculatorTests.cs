@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Xunit;
 using StringCalculator = StringCalculatorTests.StringCalculator;
 
@@ -38,6 +39,23 @@ namespace StringCalculatorTests
             var sum = calculator.Add(inputNumberAsText);
             // Assert
             Assert.Equal(inputNumber, sum);
+        }
+
+        [Theory]
+        [InlineData("1,2")]
+        [InlineData("10,20")]
+        [InlineData("100,200")]
+        public void Add__InputStringContainsTwoNumbers__ReturnThisNumber(string inputNumbersAsText)
+        {
+            // Arrange
+            var inputNumbers = inputNumbersAsText.Split(",").Select(e => Convert.ToInt32(e));
+            var validSum = inputNumbers.Sum(e => e);
+
+            var calculator = CreateTestedComponent();
+            // Act
+            var sum = calculator.Add(inputNumbersAsText);
+            // Assert
+            Assert.Equal(validSum, sum);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 
 namespace StringCalculatorTests
 {
@@ -28,7 +29,18 @@ namespace StringCalculatorTests
                 numbers = numbersAsTextWithOnlyCommaSeparator.Split(",");
             }
 
-            return numbers.Select(e => Convert.ToInt32(e)).Sum();
+            var allNumbers = numbers.Select(e => Convert.ToInt32(e)).ToList();
+            var allNegativeNumbers = allNumbers.Where(e => e < 0).ToList();
+            if (allNegativeNumbers.Any())
+            {
+                var messageBuilder = new StringBuilder();
+                messageBuilder.Append("negatives not allowed: ");
+                messageBuilder.Append(string.Join(", ", allNegativeNumbers));
+
+                throw new ArgumentException(messageBuilder.ToString());
+            }
+
+            return allNumbers.Sum();
         }
     }
 }

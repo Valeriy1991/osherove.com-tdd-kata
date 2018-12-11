@@ -168,5 +168,20 @@ namespace StringCalculatorTests
             // Assert
             Assert.Equal(validSum, sum);
         }
+
+        [Theory]
+        [InlineData("//[***][%%]\n1***2***3%%4%%5", 15)]
+        [InlineData("//[##][^]\n10##20^30", 60)]
+        [InlineData("//[*][%%%]\n999*1000%%%1001", 1999)]
+        public void Add__InputStringContainsNumbersAndMultipleDelimitersWithAnyLength__ReturnSumOfInputNumbers(
+            string inputNumbersAsText, int validSum)
+        {
+            // Arrange
+            var calculator = CreateTestedComponent();
+            // Act
+            var sum = calculator.Add(inputNumbersAsText);
+            // Assert
+            Assert.Equal(validSum, sum);
+        }
     }
 }

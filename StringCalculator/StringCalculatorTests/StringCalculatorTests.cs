@@ -42,16 +42,13 @@ namespace StringCalculatorTests
         }
 
         [Theory]
-        [InlineData("1,2")]
-        [InlineData("10,20")]
-        [InlineData("100,200")]
-        public void Add__InputStringContainsTwoNumbers_SeparatorIsComma__ReturnSumOfThisNumbers(string inputNumbersAsText)
+        [InlineData("1,2", 3)]
+        [InlineData("10,20", 30)]
+        [InlineData("100,200", 300)]
+        public void Add__InputStringContainsTwoNumbers_SeparatorIsComma__ReturnSumOfThisNumbers(
+            string inputNumbersAsText, int validSum)
         {
             // Arrange
-            var separator = ",";
-            var inputNumbers = inputNumbersAsText.Split(separator).Select(e => Convert.ToInt32(e));
-            var validSum = inputNumbers.Sum(e => e);
-
             var calculator = CreateTestedComponent();
             // Act
             var sum = calculator.Add(inputNumbersAsText);
@@ -60,16 +57,13 @@ namespace StringCalculatorTests
         }
 
         [Theory]
-        [InlineData("1,2,3,4,5,6,7,8,9,10")]
-        [InlineData("10,20,30,40,50,60")]
-        [InlineData("100,200,300")]
-        public void Add__InputStringContainsManyNumbers_SeparatorIsComma__ReturnSumOfThisNumbers(string inputNumbersAsText)
+        [InlineData("1,2,3,4,5,6,7,8,9,10", 55)]
+        [InlineData("10,20,30,40,50,60", 210)]
+        [InlineData("100,200,300", 600)]
+        public void Add__InputStringContainsManyNumbers_SeparatorIsComma__ReturnSumOfThisNumbers(
+            string inputNumbersAsText, int validSum)
         {
             // Arrange
-            var separator = ",";
-            var inputNumbers = inputNumbersAsText.Split(separator).Select(e => Convert.ToInt32(e));
-            var validSum = inputNumbers.Sum(e => e);
-
             var calculator = CreateTestedComponent();
             // Act
             var sum = calculator.Add(inputNumbersAsText);
@@ -79,18 +73,29 @@ namespace StringCalculatorTests
 
 
         [Theory]
-        [InlineData("1\n2\n3\n4\n5\n6\n7\n8\n9\n10")]
-        [InlineData("1\n2,3")]
-        [InlineData("100\n200\n300")]
+        [InlineData("1\n2\n3\n4\n5\n6\n7\n8\n9\n10", 55)]
+        [InlineData("1\n2,3", 6)]
+        [InlineData("100\n200\n300", 600)]
         public void Add__InputStringContainsManyNumbers_SeparatorIsNewLine__ReturnSumOfThisNumbers(
-            string inputNumbersAsText)
+            string inputNumbersAsText, int validSum)
         {
             // Arrange
-            var newLineSeparator = '\n';
-            var commaSeparator = ',';
-            var inputNumbersWithCommaSeparator = inputNumbersAsText.Replace(newLineSeparator, commaSeparator);
-            var inputNumbers = inputNumbersWithCommaSeparator.Split(commaSeparator).Select(e => Convert.ToInt32(e));
-            var validSum = inputNumbers.Sum(e => e);
+            var calculator = CreateTestedComponent();
+            // Act
+            var sum = calculator.Add(inputNumbersAsText);
+            // Assert
+            Assert.Equal(validSum, sum);
+        }
+
+        [Theory]
+        [InlineData("//;\n5", 5)]
+        [InlineData("//;\n1;2", 3)]
+        [InlineData("//-\n100-200-300", 600)]
+        public void Add__InputStringContainsDelimiterAtFirstLineAndAlsoContainsSomeNumbers__ReturnSumOfThisNumbers(
+            string inputNumbersAsText, int validSum)
+        {
+            // Arrange
+            
 
             var calculator = CreateTestedComponent();
             // Act

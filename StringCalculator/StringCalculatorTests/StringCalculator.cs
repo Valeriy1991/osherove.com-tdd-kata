@@ -10,18 +10,22 @@ namespace StringCalculatorTests
             if (string.Equals(numbersAsText, ""))
                 return 0;
 
-            var numbersAsTextWithOnlyCommaSeparator = numbersAsText.Replace('\n', ',');
+            string[] numbers;
 
-            var numbers = numbersAsTextWithOnlyCommaSeparator.Split(",");
-            if (numbers.Length == 1)
-                return Convert.ToInt32(numbers[0]);
-
-            if (numbers.Length == 2)
+            var separatorSign = "//";
+            var separatorSignStartPosition = numbersAsText.IndexOf(separatorSign, StringComparison.Ordinal);
+            if (separatorSignStartPosition == 0)
             {
-                var firstNumber = Convert.ToInt32(numbers[0]);
-                var secondNumber = Convert.ToInt32(numbers[1]);
-
-                return firstNumber + secondNumber;
+                var separator = numbersAsText.Substring(separatorSign.Length, 1);
+                var inputNumbersAsTextWithoutSeparator =
+                    numbersAsText.Substring(separatorSign.Length + separator.Length);
+                var inputNumbersAsTextWithoutFirstNewLine = inputNumbersAsTextWithoutSeparator.Substring(1);
+                numbers = inputNumbersAsTextWithoutFirstNewLine.Split(separator);
+            }
+            else
+            {
+                var numbersAsTextWithOnlyCommaSeparator = numbersAsText.Replace('\n', ',');
+                numbers = numbersAsTextWithOnlyCommaSeparator.Split(",");
             }
 
             return numbers.Select(e => Convert.ToInt32(e)).Sum();

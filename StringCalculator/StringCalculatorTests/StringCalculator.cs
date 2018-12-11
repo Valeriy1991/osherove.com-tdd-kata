@@ -10,7 +10,9 @@ namespace StringCalculatorTests
             if (string.Equals(numbersAsText, ""))
                 return 0;
 
-            var numbers = numbersAsText.Split(",");
+            var numbersAsTextWithOnlyCommaSeparator = numbersAsText.Replace('\n', ',');
+
+            var numbers = numbersAsTextWithOnlyCommaSeparator.Split(",");
             if (numbers.Length == 1)
                 return Convert.ToInt32(numbers[0]);
 

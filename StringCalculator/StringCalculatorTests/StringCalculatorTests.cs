@@ -119,6 +119,7 @@ namespace StringCalculatorTests
             var ex = Record.Exception(act);
             // Assert
             Assert.IsType<ArgumentException>(ex);
+            Assert.Contains("negatives not allowed", ex.Message);
             Assert.Contains(validNegativeNumbersAsText, ex.Message);
         }
     }

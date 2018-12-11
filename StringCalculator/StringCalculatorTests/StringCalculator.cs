@@ -42,11 +42,31 @@ namespace StringCalculatorTests
 
         private IEnumerable<int> GetNumbersWithCustomSeparator(string inputNumbersAsText)
         {
-            var separatorRegex = new Regex(@"(?<=//)[^\n]+");
-            var separator = separatorRegex.Match(inputNumbersAsText).Value;
-
+            var customSeparatorRegex = new Regex(@"(?<=//)[^\n]+");
+            var separator = customSeparatorRegex.Match(inputNumbersAsText).Value;
             var inputNumbersAsTextWithoutSeparator =
                 inputNumbersAsText.Substring(CustomSeparatorStartChar.Length + separator.Length);
+            
+            const string separatorGroupName = "separator";
+            var multipleCustomSeparatorsRegex = new Regex($@"(?<=\[)(?<{separatorGroupName}>[^\]]+)");
+            if (multipleCustomSeparatorsRegex.IsMatch(separator))
+            {
+                var foundSeparators = multipleCustomSeparatorsRegex.Matches(separator).Select(e => e.Value).ToList();
+                if (foundSeparators.Any())
+                {
+                    var firstCustomSeparator = foundSeparators[0];
+                    var otherCustomSeparators = foundSeparators.Skip(1);
+
+                    foreach (var otherCustomSeparator in otherCustomSeparators)
+                    {
+                        inputNumbersAsTextWithoutSeparator =
+                            inputNumbersAsTextWithoutSeparator.Replace(otherCustomSeparator, firstCustomSeparator);
+                    }
+
+                    separator = firstCustomSeparator;
+                }
+            }
+
             var inputNumbersAsTextWithoutFirstNewLine = inputNumbersAsTextWithoutSeparator.Substring(1);
             var numbersAsText = inputNumbersAsTextWithoutFirstNewLine.Split(separator);
             return ConvertToNumbers(numbersAsText);

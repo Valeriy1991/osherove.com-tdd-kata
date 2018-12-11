@@ -122,5 +122,21 @@ namespace StringCalculatorTests
             Assert.Contains("negatives not allowed", ex.Message);
             Assert.Contains(validNegativeNumbersAsText, ex.Message);
         }
+
+        [Theory]
+        [InlineData("1,2,3,4,1001,1002", 10)]
+        [InlineData("1001,1002,1003", 0)]
+        [InlineData("1000,1001,1002,1003", 1000)]
+        public void
+            Add__InputStringContainsNumbersThatBiggerThan1000__ReturnSumOfThisNumbersWithoutNumbersThatBiggerThan1000(
+                string inputNumbersAsText, int validSum)
+        {
+            // Arrange
+            var calculator = CreateTestedComponent();
+            // Act
+            var sum = calculator.Add(inputNumbersAsText);
+            // Assert
+            Assert.Equal(validSum, sum);
+        }
     }
 }

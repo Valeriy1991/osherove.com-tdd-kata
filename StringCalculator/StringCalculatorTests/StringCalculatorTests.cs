@@ -95,13 +95,31 @@ namespace StringCalculatorTests
             string inputNumbersAsText, int validSum)
         {
             // Arrange
-            
-
             var calculator = CreateTestedComponent();
             // Act
             var sum = calculator.Add(inputNumbersAsText);
             // Assert
             Assert.Equal(validSum, sum);
+        }
+
+        [Theory]
+        [InlineData("//;\n-5", "-5")]
+        [InlineData("//;\n-1;-2", "-1, -2")]
+        [InlineData("//;\n-1;-2;3", "-1, -2")]
+        [InlineData("1\n2,-3", "-3")]
+        [InlineData("100,-200,300", "-200")]
+        [InlineData("10\n20\n30\n-40\n-50", "-40, -50")]
+        public void Add__InputStringContainsNegativeNumbers__ThrowExceptionWithThisNegativeNumbers(
+            string inputNumbersAsText, string validNegativeNumbersAsText)
+        {
+            // Arrange
+            var calculator = CreateTestedComponent();
+            Action act = () => calculator.Add(inputNumbersAsText);
+            // Act
+            var ex = Record.Exception(act);
+            // Assert
+            Assert.IsType<ArgumentException>(ex);
+            Assert.Contains(validNegativeNumbersAsText, ex.Message);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace StringCalculatorTests
 {
@@ -21,7 +22,7 @@ namespace StringCalculatorTests
                 return firstNumber + secondNumber;
             }
 
-            throw new InvalidOperationException();
+            return numbers.Select(e => Convert.ToInt32(e)).Sum();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace StringCalculatorTests
 {
@@ -13,13 +14,15 @@ namespace StringCalculatorTests
 
             string[] numbers;
 
-            var separatorSign = "//";
-            var separatorSignStartPosition = numbersAsText.IndexOf(separatorSign, StringComparison.Ordinal);
+            var separatorStartChar = "//";
+            var separatorSignStartPosition = numbersAsText.IndexOf(separatorStartChar, StringComparison.Ordinal);
             if (separatorSignStartPosition == 0)
             {
-                var separator = numbersAsText.Substring(separatorSign.Length, 1);
+                var separatorRegex = new Regex(@"(?<=//)[^\n]+");
+                var separator = separatorRegex.Match(numbersAsText).Value;
+
                 var inputNumbersAsTextWithoutSeparator =
-                    numbersAsText.Substring(separatorSign.Length + separator.Length);
+                    numbersAsText.Substring(separatorStartChar.Length + separator.Length);
                 var inputNumbersAsTextWithoutFirstNewLine = inputNumbersAsTextWithoutSeparator.Substring(1);
                 numbers = inputNumbersAsTextWithoutFirstNewLine.Split(separator);
             }

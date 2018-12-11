@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Xunit;
+using StringCalculator = StringCalculatorTests.StringCalculator;
 
 namespace StringCalculatorTests
 {
@@ -7,15 +8,20 @@ namespace StringCalculatorTests
     [Trait("Category", "Unit")]
     public class StringCalculatorTests
     {
+        private StringCalculator CreateTestedComponent()
+        {
+            return new StringCalculator();
+        }
+
         [Fact]
-        public void Test()
+        public void Add__InputStringIsEmpty__ReturnEmptyString()
         {
             // Arrange
-
+            var calculator = CreateTestedComponent();
             // Act
-
+            var sum = calculator.Add("");
             // Assert
-            Assert.NotNull(null);
+            Assert.Equal(0, sum);
         }
     }
 }

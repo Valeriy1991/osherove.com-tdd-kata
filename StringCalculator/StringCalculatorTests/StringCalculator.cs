@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,39 +9,51 @@ namespace StringCalculatorTests
 {
     public class StringCalculator
     {
-        public int Add(string numbersAsText)
+        public int Add(string inputNumbersAsText)
         {
-            if (string.Equals(numbersAsText, ""))
+            if (string.Equals(inputNumbersAsText, ""))
                 return 0;
 
-            string[] numbers;
+            string[] numbersAsText;
 
             var separatorStartChar = "//";
-            var separatorSignStartPosition = numbersAsText.IndexOf(separatorStartChar, StringComparison.Ordinal);
+            var separatorSignStartPosition = inputNumbersAsText.IndexOf(separatorStartChar, StringComparison.Ordinal);
             if (separatorSignStartPosition == 0)
             {
                 var separatorRegex = new Regex(@"(?<=//)[^\n]+");
-                var separator = separatorRegex.Match(numbersAsText).Value;
+                var separator = separatorRegex.Match(inputNumbersAsText).Value;
 
                 var inputNumbersAsTextWithoutSeparator =
-                    numbersAsText.Substring(separatorStartChar.Length + separator.Length);
+                    inputNumbersAsText.Substring(separatorStartChar.Length + separator.Length);
                 var inputNumbersAsTextWithoutFirstNewLine = inputNumbersAsTextWithoutSeparator.Substring(1);
-                numbers = inputNumbersAsTextWithoutFirstNewLine.Split(separator);
+                numbersAsText = inputNumbersAsTextWithoutFirstNewLine.Split(separator);
             }
             else
             {
-                var numbersAsTextWithOnlyCommaSeparator = numbersAsText.Replace('\n', ',');
-                numbers = numbersAsTextWithOnlyCommaSeparator.Split(",");
+                var numbersAsTextWithOnlyCommaSeparator = inputNumbersAsText.Replace('\n', ',');
+                numbersAsText = numbersAsTextWithOnlyCommaSeparator.Split(",");
             }
 
-            var allNumbers = numbers.Select(e => Convert.ToInt32(e)).ToList();
+            var numbers = ConvertToNumbers(numbersAsText);
 
-            var allNumbersThatBiggerThan1000 = allNumbers.Where(e => e > 1000).ToList();
-            if (allNumbersThatBiggerThan1000.Any())
-            {
-                allNumbers.RemoveAll(e => e > 1000);
-            }
-            
+            RemoveNumbersThatBiggerThan1000(numbers);
+            CheckThatExistsNegativeNumbers(numbers);
+
+            return numbers.Sum();
+        }
+
+        private List<int> ConvertToNumbers(string[] numbersAsText)
+        {
+            return numbersAsText.Select(e => Convert.ToInt32(e)).ToList();
+        }
+
+        private void RemoveNumbersThatBiggerThan1000(List<int> allNumbers)
+        {
+            allNumbers.RemoveAll(e => e > 1000);
+        }
+
+        private void CheckThatExistsNegativeNumbers(IEnumerable<int> allNumbers)
+        {
             var allNegativeNumbers = allNumbers.Where(e => e < 0).ToList();
             if (allNegativeNumbers.Any())
             {
@@ -49,8 +63,6 @@ namespace StringCalculatorTests
 
                 throw new ArgumentException(messageBuilder.ToString());
             }
-
-            return allNumbers.Sum();
         }
     }
 }

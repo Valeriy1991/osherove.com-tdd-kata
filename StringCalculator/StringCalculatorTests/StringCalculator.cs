@@ -30,6 +30,13 @@ namespace StringCalculatorTests
             }
 
             var allNumbers = numbers.Select(e => Convert.ToInt32(e)).ToList();
+
+            var allNumbersThatBiggerThan1000 = allNumbers.Where(e => e > 1000).ToList();
+            if (allNumbersThatBiggerThan1000.Any())
+            {
+                allNumbers.RemoveAll(e => e > 1000);
+            }
+            
             var allNegativeNumbers = allNumbers.Where(e => e < 0).ToList();
             if (allNegativeNumbers.Any())
             {

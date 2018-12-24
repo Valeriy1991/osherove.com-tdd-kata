@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Xunit;
-using StringCalculator = StringCalculatorTests.StringCalculator;
 
-namespace StringCalculatorTests
+namespace StringCalculatorTests.Kata1
 {
     [ExcludeFromCodeCoverage]
     [Trait("Category", "Unit")]
